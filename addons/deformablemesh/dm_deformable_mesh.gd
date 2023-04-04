@@ -133,19 +133,10 @@ func notify_deformer_removed(deformer: SphericalDeformer):
 	dm_need_update = true
 
 #---------------------------------------------------------------------------------------------------
-# TODO
-#---------------------------------------------------------------------------------------------------
-
-#TODO next: Find a way to check if the deformer center is inside mesh, to avoid deformation artifacts
-#TODO: Check with an imported mesh from Blender
-#TODO: Check with mutiple dm_surfaces and materials
-#IDEA: Use the deformer to change the color of vertices -> debug utility ?
-#TODO: Could I add an inner and an outer radius? Improving customizable params.
-
-#---------------------------------------------------------------------------------------------------
 # KNOWN BUGS / LIMITATIONS
 #---------------------------------------------------------------------------------------------------
 
 #BUG: Error message when deleting node referenced through NodePath property or metadata #75168 
 #	  https://github.com/godotengine/godot/issues/75168
+
 #LIMITATION: A spherical deformer is currently only selectable from the scene tree
