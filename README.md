@@ -15,7 +15,7 @@
 
 ## Getting Started
 
-1. Download the [repository]([https://github.com/cloudofoz/godot-curvemesh/archive/refs/heads/main.zip](https://github.com/cloudofoz/godot-deformablemesh/archive/refs/heads/main.zip)) ~~or download the (stable) addon from the AssetLib in Godot~~ ( *not yet* ).
+1. Download the [repository](https://github.com/cloudofoz/godot-curvemesh/archive/refs/heads/main.zip](https://github.com/cloudofoz/godot-deformablemesh/archive/refs/heads/main.zip)) or download the (stable) addon from the AssetLib in Godot ([link](https://godotengine.org/asset-library/asset/1794)).
 2. Import the **addons** folder into your project.
 3. Activate `DeformableMesh` under * *Project > Project Settings > Plugins.* *
 
