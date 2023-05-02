@@ -25,25 +25,22 @@ extends Object
 # CONSTANTS
 #---------------------------------------------------------------------------------------------------
 
-const SphericalDeformer = preload("dm_spherical_deformer.gd")
+const Deformer = preload("dm_deformer.gd")
+
+const DeformableMeshInstance3D = preload("dm_deformable_mesh.gd")
 
 #---------------------------------------------------------------------------------------------------
 # PRIVATE VARIABLES
 #---------------------------------------------------------------------------------------------------
 
 var dm_vpos: PackedVector3Array
-var dm_mesh_data: MeshDataTool = null
+var dm_uvcoords: PackedVector2Array
+var dm_indices: PackedInt32Array
+var dm_st: SurfaceTool = null
 
 #---------------------------------------------------------------------------------------------------
 # PRIVATE METHODS
 #---------------------------------------------------------------------------------------------------
-
-func dm_store_vpos():
-	assert(dm_mesh_data)
-	var vcount = dm_mesh_data.get_vertex_count()
-	dm_vpos.resize(vcount)
-	for vidx in range(vcount):
-		dm_vpos[vidx] = dm_mesh_data.get_vertex(vidx)
 
 #---------------------------------------------------------------------------------------------------
 # PUBLIC METHODS
@@ -52,40 +49,34 @@ func dm_store_vpos():
 ## Uses specified surface of given mesh to pupulate data of SurfaceData
 func create_from_surface(mesh: Mesh, surface_index: int):
 	assert(mesh && surface_index >= 0)
-	if(!self.dm_mesh_data): self.dm_mesh_data = MeshDataTool.new()
+	if(!self.dm_st): self.dm_st = SurfaceTool.new()
 	else: self.dm_mesh_data.clear()
-	dm_mesh_data.create_from_surface(mesh, surface_index)
-	dm_store_vpos()
+	var dm_arrays = mesh.surface_get_arrays(surface_index)
+	dm_vpos = dm_arrays[Mesh.ARRAY_VERTEX]
+	dm_indices = dm_arrays[Mesh.ARRAY_INDEX]
+	dm_uvcoords = dm_arrays[Mesh.ARRAY_TEX_UV]
 
-## Generates an unmodified mesh
-func init(): 
-	assert(dm_mesh_data)
+## Generate a deformed mesh surface from an array of deformers
+func update_surface(deformers: Array[Deformer], deformable: DeformableMeshInstance3D) -> void:
+	assert(dm_st)
+	for deformer in deformers:
+		deformer._on_begin_update(deformable)
 	var vcount = dm_vpos.size()
-	for vidx in range(vcount):
-		dm_mesh_data.set_vertex(vidx, dm_vpos[vidx])
-
-## Generate a deformed mesh from an array of deformers and 
-## their origins local to the deformable node.
-func update_all(deformers: Array[SphericalDeformer], local_origins: PackedVector3Array) -> void:
-	assert(dm_mesh_data)
-	var vcount = dm_vpos.size()
-	var dcount = deformers.size()
+	var icount = dm_indices.size()
+	dm_st.clear()
+	dm_st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for vidx in range(vcount):
 		var v = dm_vpos[vidx]
-		for didx in range(dcount):
-			var local_origin = local_origins[didx]
-			var deformer = deformers[didx]
+		for deformer in deformers:
 			if(!deformer.visible): continue
-			var d = local_origin.distance_to(v)
-			var delta = deformer.radius - d
-			if(delta <= 0): continue
-			var k = deformer.strength * ease(delta / deformer.radius, deformer.attenuation)  
-			var n = (local_origin - v).normalized()
-			v -= n * k
-		dm_mesh_data.set_vertex(vidx, v)
+			v = deformer._on_update_vertex(v)
+		dm_st.set_uv(dm_uvcoords[vidx])
+		dm_st.add_vertex(v)
+	for idx in range(icount):
+		dm_st.add_index(dm_indices[idx])
 
 ## Adds a new surface to a specified mesh with edited data
 func commit_to_surface(mesh: ArrayMesh):
-	assert(mesh)
-	if(!dm_mesh_data): return
-	dm_mesh_data.commit_to_surface(mesh)
+	assert(mesh && dm_st)
+	dm_st.generate_normals()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, dm_st.commit_to_arrays())

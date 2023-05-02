@@ -27,7 +27,7 @@ extends MeshInstance3D
 
 const SurfaceData = preload("dm_surface_data.gd")
 
-const SphericalDeformer = preload("dm_spherical_deformer.gd")
+const Deformer = preload("dm_deformer.gd")
 
 #---------------------------------------------------------------------------------------------------
 # PUBLIC VARIABLES
@@ -44,14 +44,19 @@ const SphericalDeformer = preload("dm_spherical_deformer.gd")
 		original_mesh.changed.connect(dm_init_surfaces)
 		dm_init_surfaces()
 
+## Array of deformer node paths that affects this mesh.
+@onready @export var deformers: Array[NodePath]:
+	set(value):
+		deformers = value
+		dm_find_deformers()
+
 #---------------------------------------------------------------------------------------------------
 # PRIVATE VARIABLES
 #---------------------------------------------------------------------------------------------------
 
 var dm_surfaces = [SurfaceData];
 var dm_need_update: bool = false
-var dm_deformers: Array[SphericalDeformer]
-var dm_deformers_local_orgins: PackedVector3Array
+var dm_deformers: Array[Deformer]
 
 #---------------------------------------------------------------------------------------------------
 # VIRTUAL METHODS
@@ -59,9 +64,10 @@ var dm_deformers_local_orgins: PackedVector3Array
 
 func _init():
 	set_notify_transform(true)
-	dm_deformers.clear()
-	dm_deformers_local_orgins.clear()
-	dm_need_update = true
+	dm_clean_deformers()
+
+func _ready():
+	dm_find_deformers()
 
 func _process(_delta):
 	if(dm_need_update):
@@ -71,7 +77,9 @@ func _process(_delta):
 func _notification(what):
 	match what:
 		NOTIFICATION_TRANSFORM_CHANGED:
-			dm_update_deformer_origins()
+			dm_need_update = true
+		NOTIFICATION_ENTER_WORLD:
+			dm_find_deformers()
 
 #---------------------------------------------------------------------------------------------------
 # PRIVATE METHODS
@@ -79,19 +87,12 @@ func _notification(what):
 
 func dm_init_surfaces():
 	if(!original_mesh): return
-	dm_surfaces.clear()
 	mesh = ArrayMesh.new()
-	if not(original_mesh is PrimitiveMesh):
-		var surface_count = original_mesh.get_surface_count()
-		for i in range(surface_count):
-			var s = SurfaceData.new()
-			s.create_from_surface(original_mesh, i)
-			dm_surfaces.push_back(s)
-	else:
-		var temp_mesh = ArrayMesh.new()
-		temp_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,original_mesh.get_mesh_arrays())
+	var surface_count = original_mesh.get_surface_count()
+	dm_surfaces.clear()
+	for i in range(surface_count):
 		var s = SurfaceData.new()
-		s.create_from_surface(temp_mesh, 0)
+		s.create_from_surface(original_mesh, i)
 		dm_surfaces.push_back(s)
 	dm_update()
 
@@ -102,41 +103,61 @@ func dm_update():
 	for sidx in range(dm_surfaces.size()):
 		var s = dm_surfaces[sidx] 
 		if(!s): continue
-		s.update_all(dm_deformers, dm_deformers_local_orgins)
+		s.update_surface(dm_deformers, self)
 		s.commit_to_surface(mesh)
+		mesh.surface_set_material(sidx, original_mesh.surface_get_material(sidx))
 
-func dm_update_deformer_origins():
-	var dcount = dm_deformers.size()
-	for i in range(dcount):
-		dm_deformers_local_orgins[i] = self.to_local(dm_deformers[i].global_position)
+func dm_clean_deformers():
+	dm_deformers.clear()
+
+func dm_add_deformer(deformer: Deformer) -> void:
+	dm_deformers.push_back(deformer)
+	if(!deformer.on_deformer_updated.is_connected(_on_deformer_updated)):
+		deformer.on_deformer_updated.connect(_on_deformer_updated)
+	if(!deformer.on_deformer_removed.is_connected(_on_deformer_removed)):
+		deformer.on_deformer_removed.connect(_on_deformer_removed)
+
+func dm_rem_deformer(deformer: Deformer) -> void:
+	var didx = dm_deformers.find(deformer)
+	if(didx > -1): dm_deformers.remove_at(didx)
+	if(deformer.on_deformer_updated.is_connected(_on_deformer_updated)):
+		deformer.on_deformer_updated.disconnect(_on_deformer_updated)
+	if(deformer.on_deformer_removed.is_connected(_on_deformer_removed)):
+		deformer.on_deformer_removed.disconnect(_on_deformer_removed)
+
+func dm_find_deformers():
+	if(!is_inside_tree()): return
+	dm_clean_deformers()
+	for path in deformers:
+		var n = get_node_or_null(path)
+		if(!n): continue
+		var d = n as Deformer
+		if(d && !dm_deformers.has(d)):
+			dm_add_deformer(d)
+		else:
+			var didx = deformers.find(path)
+			deformers[didx] = NodePath()
+			notify_property_list_changed()
 	dm_need_update = true
 
 #---------------------------------------------------------------------------------------------------
-# PUBLIC METHODS
+# CALLBACKS
 #---------------------------------------------------------------------------------------------------
 
-func notify_deformer_updated(deformer: SphericalDeformer):
+func _on_deformer_updated(deformer: Deformer):
 	var i = dm_deformers.find(deformer)
-	var local_origin = self.to_local(deformer.global_position)
-	if( i == -1 ):
-		dm_deformers.push_back(deformer)
-		dm_deformers_local_orgins.push_back(local_origin)
-	else:
-		dm_deformers_local_orgins[i] = local_origin
+	if( i == -1 ): dm_add_deformer(deformer)
 	dm_need_update = true
 
-func notify_deformer_removed(deformer: SphericalDeformer):
-	var i = dm_deformers.find(deformer)
-	if(i == -1): return
-	dm_deformers.remove_at(i)
-	dm_deformers_local_orgins.remove_at(i)
+func _on_deformer_removed(deformer: Deformer):
+	dm_rem_deformer(deformer)
 	dm_need_update = true
 
 #---------------------------------------------------------------------------------------------------
 # KNOWN BUGS / LIMITATIONS
 #---------------------------------------------------------------------------------------------------
 
-#BUG: Error message when deleting node referenced through NodePath property or metadata #75168 
-#	  https://github.com/godotengine/godot/issues/75168
-
-#LIMITATION: A spherical deformer is currently only selectable from the scene tree
+#BUG:        Error message when deleting node referenced through NodePath property or metadata #75168 
+#	         https://github.com/godotengine/godot/issues/75168
+#LIMITATION: A deformer is currently only selectable from the scene tree
+#LIMITATION: A deformable mesh is currently limited by one UV set
