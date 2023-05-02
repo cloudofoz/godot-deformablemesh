@@ -1,9 +1,9 @@
-![Version](https://img.shields.io/badge/Godot-v4.0.1-informational) ![License](https://img.shields.io/github/license/cloudofoz/godot-deformablemesh)
+![Version](https://img.shields.io/badge/Godot-v4.0.2%20stable-informational) ![License](https://img.shields.io/github/license/cloudofoz/godot-deformablemesh)
 
 <img src="addons/deformablemesh/dm_icon_deformable_mesh.svg" width="64" align="left"/>
 
 ## godot-deformablemesh
-**This addon allows to deform 3D meshes using customizable deformers at run-time. In this version SphericalDeformer nodes are provided.**
+**This addon allows to deform 3D meshes using customizable deformers at run-time**
 
 <br clear="left" />
 
@@ -13,37 +13,33 @@
   <img src="media/dm_screen_2.gif" width="320" />
 </p>
 
+## Main features
+
+Use the default deformers of **v0.2**:
+- `SphericalDeformer`
+- `BendDeformer`
+
+or **easily create your owns** by extending the base class and overriding just a couple of methods (*a tutorial will be available*).
+
 ## Getting Started
 
-1. Download the [repository](https://github.com/cloudofoz/godot-curvemesh/archive/refs/heads/main.zip](https://github.com/cloudofoz/godot-deformablemesh/archive/refs/heads/main.zip)) or download the (stable) addon from the AssetLib in Godot ([link](https://godotengine.org/asset-library/asset/1794)).
+1. Download the [repository](https://github.com/cloudofoz/godot-curvemesh/archive/refs/heads/main.zip](https://github.com/cloudofoz/godot-deformablemesh/archive/refs/heads/main.zip)) or download the stable addon from the AssetLib in Godot ([link](https://godotengine.org/asset-library/asset/1794)).
 2. Import the **addons** folder into your project.
 3. Activate `DeformableMesh` under * *Project > Project Settings > Plugins.* *
 
 ![](media/dm_getting_started_00.jpg)
 
-4. Add a `DeformableMeshInstance3D` node to the scene.
-
-![](media/dm_getting_started_01.jpg)
-
-5. Add the mesh resource you want to deform in the `Original Mesh` property.
-
-![](media/dm_getting_started_02.jpg)
-
-6. Add a `SphericalDeformer` node to the scene.
-
-![](media/dm_getting_started_03.jpg)
-
-7. Add the `DeformableMeshInstance3D` node you created before in the `Deformables` property.
-
-![](media/dm_getting_started_04.jpg)
-
-8. Tweak the `SphericalDeformer` parameters to adjust the deformation
-
-![](media/dm_getting_started_05.jpg)
+4. (*further steps will be available soon*)
 
 ## Changelog
 
-v0.10
+v0.20
+
+- add: bend deformers
+- add: base class to easily create custom deformers
+- code refactoring and minor improvements
+
+![v0.10](https://github.com/cloudofoz/godot-deformablemesh/tree/v0.1)
 
 - first release
 
