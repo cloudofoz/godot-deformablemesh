@@ -8,9 +8,9 @@
 <br clear="left" />
 
 <p align="center">
-  <img src="media/dm_screen_1.gif" width="320" />
+  <img src="media/dm_screen_4.gif" width="320" />
   <img src="media/dm_screen_3.gif" width="320" />
-  <img src="media/dm_screen_2.gif" width="320" />
+  <img src="media/dm_screen_1.gif" width="320" />
 </p>
 
 ## Main features
