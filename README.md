@@ -1,4 +1,4 @@
-![Version](https://img.shields.io/badge/Godot-v4.1.1-informational) ![License](https://img.shields.io/github/license/cloudofoz/godot-deformablemesh)
+![Version](https://img.shields.io/badge/Godot-v4.2.1-informational) ![License](https://img.shields.io/github/license/cloudofoz/godot-deformablemesh)
 
 <img src="addons/deformablemesh/dm_icon_deformable_mesh.svg" width="64" align="left"/>
 
