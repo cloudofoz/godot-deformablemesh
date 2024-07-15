@@ -8,22 +8,20 @@
 <br clear="left" />
 
 <p align="center">
-  <img src="media/dm_screen_4.gif" width="320" />
-  <img src="media/dm_screen_3.gif" width="320" />
-  <img src="media/dm_screen_1.gif" width="320" />
+  <img src="media/dm_screen_v03_1.gif" width="480" />
 </p>
 
 ## Main features
 
 Use the default deformers:
 - `SphericalDeformer` <img src="addons/deformablemesh/dm_icon_spherical_deformer.svg" width="20"/>
-- `BendDeformer` <img src="addons/deformablemesh/dm_icon_bend_deformer.svg" width="20"/>
-
+- `StandardDeformer` <img src="addons/deformablemesh/dm_icon_std_deformer.svg" width="20"/> ( Bend, Twist and Taper )
+  
 or **easily create your owns** by extending the base class and overriding just a couple of methods (*a tutorial will be available*).
 
 ## Getting Started
 
-1. Download the [repository](https://github.com/cloudofoz/godot-curvemesh/archive/refs/heads/main.zip](https://github.com/cloudofoz/godot-deformablemesh/archive/refs/heads/main.zip)) or download the stable addon from the AssetLib in Godot ([link](https://godotengine.org/asset-library/asset/1794)).
+1. Download the [repository](https://github.com/cloudofoz/godot-curvemesh/archive/refs/heads/main.zip](https://github.com/cloudofoz/godot-deformablemesh/archive/refs/heads/main.zip)) or download the stable addon (v1.0, soon to be replaced) from the AssetLib in Godot ([link](https://godotengine.org/asset-library/asset/1794)).
 
 2. Import the **addons** folder into your project.
 
@@ -65,7 +63,11 @@ or **easily create your owns** by extending the base class and overriding just a
 
 ## Changelog
 
-v0.20
+v0.30
+- add: standard deformer ( bend, twist and taper )
+- removed: bend deformer ( a better version is included inside the standard deformer )
+
+[v0.20](https://github.com/cloudofoz/godot-deformablemesh/releases/tag/v0.20)
 
 - add: bend deformers
 - add: base class to easily create custom deformers
