@@ -1,4 +1,4 @@
-# Copyright (C) 2023 Claudio Z. (cloudofoz)
+# Copyright (C) 2023-2024 Claudio Z. (cloudofoz)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,11 @@ extends EditorPlugin
 
 func _enter_tree() -> void:
 	add_custom_type("SphericalDeformer", "MeshInstance3D", preload("dm_spherical_deformer.gd"), preload("dm_icon_spherical_deformer.svg"))
-	add_custom_type("BendDeformer", "MeshInstance3D", preload("dm_bend_deformer.gd"), preload("dm_icon_bend_deformer.svg"))
+	add_custom_type("StandardDeformer", "MeshInstance3D", preload("dm_std_deformer.gd"), preload("dm_icon_std_deformer.svg"))
 	add_custom_type("DeformableMeshInstance3D", "MeshInstance3D", preload("dm_deformable_mesh.gd"), preload("dm_icon_deformable_mesh.svg"))
 
 
 func _exit_tree() -> void:
 	remove_custom_type("SphericalDeformer")
-	remove_custom_type("BendDeformer")
+	remove_custom_type("StandardDeformer")
 	remove_custom_type("DeformableMeshInstance3D")
