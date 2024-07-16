@@ -3,12 +3,13 @@
 <img src="addons/deformablemesh/dm_icon_deformable_mesh.svg" width="64" align="left"/>
 
 ## godot-deformablemesh
-**This addon allows to deform 3D meshes using customizable deformers at run-time**
+**This addon allows to deform 3D meshes using a stack of customizable deformers at run-time**
 
 <br clear="left" />
 
 <p align="center">
   <img src="media/dm_screen_v03_1.gif" width="480" />
+  <img src="media/dm_example_scene_scr.jpg" width="480" />
 </p>
 
 ## Main features
@@ -60,6 +61,19 @@ or **easily create your owns** by extending the base class and overriding just a
 <p align="center">
   <img src="media/dm_getting_started_05.jpg" />
 </p>
+
+## Example Project
+
+1. [**You can download here**](media/dm_example_scene.zip) an example project that shows the basic functionalities of `DeformableMesh`.
+2. Unzip the file
+3. Import the project with Godot Engine 4+
+4. Open the scene `dm_example_scene_v030.tscn` (if it's not already opened)
+
+You can now try tweaking the deformer parameters. 
+Some effects are also controlled by the positions and the rotations of the deformer nodes.
+
+`DeformableMesh` can apply multiple deformers like in a stack, so the order is important to achieve the correct effect.
+You need also to specify the correct deformation axis (for some effects like bending, but it's not important with spherical deformers).
 
 ## Changelog
 
