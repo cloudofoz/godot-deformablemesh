@@ -22,7 +22,7 @@ or **easily create your owns** by extending the base class and overriding just a
 
 ## Getting Started
 
-1. Download the [repository](https://github.com/cloudofoz/godot-curvemesh/archive/refs/heads/main.zip](https://github.com/cloudofoz/godot-deformablemesh/archive/refs/heads/main.zip)) or download the stable addon (v1.0, soon to be replaced) from the AssetLib in Godot ([link](https://godotengine.org/asset-library/asset/1794)).
+1. Download the [repository](https://github.com/cloudofoz/godot-curvemesh/archive/refs/heads/main.zip](https://github.com/cloudofoz/godot-deformablemesh/archive/refs/heads/main.zip)) or download the addon from the AssetLib in Godot ([link](https://godotengine.org/asset-library/asset/1794)).
 
 2. Import the **addons** folder into your project.
 
