@@ -38,6 +38,9 @@ var dm_uvcoords: PackedVector2Array
 var dm_indices: PackedInt32Array
 var dm_st: SurfaceTool = null
 
+var dm_has_indices: bool = true
+var dm_has_uv: bool = true
+
 #---------------------------------------------------------------------------------------------------
 # PRIVATE METHODS
 #---------------------------------------------------------------------------------------------------
@@ -53,8 +56,12 @@ func create_from_surface(mesh: Mesh, surface_index: int):
 	else: self.dm_mesh_data.clear()
 	var dm_arrays = mesh.surface_get_arrays(surface_index)
 	dm_vpos = dm_arrays[Mesh.ARRAY_VERTEX]
-	dm_indices = dm_arrays[Mesh.ARRAY_INDEX]
-	dm_uvcoords = dm_arrays[Mesh.ARRAY_TEX_UV]
+	if dm_arrays[Mesh.ARRAY_INDEX]:
+		dm_indices = dm_arrays[Mesh.ARRAY_INDEX]
+	else: dm_has_indices = false
+	if dm_arrays[Mesh.ARRAY_TEX_UV]:
+		dm_uvcoords = dm_arrays[Mesh.ARRAY_TEX_UV]
+	else: dm_has_uv = false
 
 ## Generate a deformed mesh surface from an array of deformers
 func update_surface(deformers: Array[Deformer], deformable: DeformableMeshInstance3D) -> void:
@@ -70,10 +77,12 @@ func update_surface(deformers: Array[Deformer], deformable: DeformableMeshInstan
 		for deformer in deformers:
 			if(!deformer.visible): continue
 			v = deformer._on_update_vertex(v)
-		dm_st.set_uv(dm_uvcoords[vidx])
+		if dm_has_uv:
+			dm_st.set_uv(dm_uvcoords[vidx])
 		dm_st.add_vertex(v)
-	for idx in range(icount):
-		dm_st.add_index(dm_indices[idx])
+	if dm_has_indices:
+		for idx in range(icount):
+			dm_st.add_index(dm_indices[idx])
 
 ## Adds a new surface to a specified mesh with edited data
 func commit_to_surface(mesh: ArrayMesh):
