@@ -45,7 +45,7 @@ const Deformer = preload("dm_deformer.gd")
 		dm_init_surfaces()
 
 ## Array of deformer node paths that affects this mesh.
-@onready @export var deformers: Array[NodePath]:
+@onready @export var deformers: Array[Deformer]:
 	set(value):
 		deformers = value
 		dm_find_deformers()
@@ -128,15 +128,12 @@ func dm_rem_deformer(deformer: Deformer) -> void:
 func dm_find_deformers():
 	if(!is_inside_tree()): return
 	dm_clean_deformers()
-	for path in deformers:
-		var n = get_node_or_null(path)
-		if(!n): continue
-		var d = n as Deformer
+	for d in deformers:
 		if(d && !dm_deformers.has(d)):
 			dm_add_deformer(d)
 		else:
-			var didx = deformers.find(path)
-			deformers[didx] = NodePath()
+			var didx = deformers.find(d)
+			deformers[didx] = null
 			notify_property_list_changed()
 	dm_need_update = true
 
