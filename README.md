@@ -8,21 +8,26 @@
 <br clear="left" />
 
 <p align="center">
-  <img src="media/dm_screen_v03_1.gif" width="480" />
-  <img src="media/dm_example_scene_scr.jpg" width="480" />
+   <img src="media/dm_screen_v04_1.gif" height="270" />
+  <img src="media/dm_screen_v03_1.gif" height="270" />
+  <img src="media/dm_example_scene_scr.jpg" height="270" /> 
 </p>
 
-## Main features
+## Main Features
 
 Use the default deformers:
-- `SphericalDeformer` <img src="addons/deformablemesh/dm_icon_spherical_deformer.svg" width="20"/>
-- `StandardDeformer` <img src="addons/deformablemesh/dm_icon_std_deformer.svg" width="20"/> ( Bend, Twist and Taper )
-  
-or **easily create your owns** by extending the base class and overriding just a couple of methods (*a tutorial will be available*).
+- `SphericalDeformer` <img src="addons/deformablemesh/dm_icon_spherical_deformer.svg" width="20"/>  
+- `StandardDeformer` <img src="addons/deformablemesh/dm_icon_std_deformer.svg" width="20"/> (Bend, Twist, and Taper)  
+- `DragDeformer` <img src="addons/deformablemesh/dm_icon_drag_deformer.svg" width="20"/> (In **Rest Pose Mode**, position the deformer, toggle it off, and deform the mesh by moving the node.)
+
+<br>
+
+Or **easily create your own** by extending the base class and overriding just a couple of methods in `dm_deformer.gd`.
+
 
 ## Getting Started
 
-1. Download the [repository](https://github.com/cloudofoz/godot-deformablemesh/archive/refs/heads/main.zip) or download the addon from the AssetLib in Godot ([link](https://godotengine.org/asset-library/asset/1794)).
+1. Download the [repository](https://github.com/cloudofoz/godot-deformablemesh/archive/refs/heads/main.zip) or download the *previous version* of the addon from the AssetLib in Godot ([link](https://godotengine.org/asset-library/asset/1794)).
 
 2. Import the **addons** folder into your project.
 
@@ -75,21 +80,37 @@ Some effects are also controlled by the positions and the rotations of the defor
 `DeformableMesh` can apply multiple deformers like in a stack, so the order is important to achieve the correct effect.
 You need also to specify the correct deformation axis (for some effects like bending, but it's not important with spherical deformers).
 
+## Known Limitations
+
+- This addon is designed with simplicity and versatility as primary goals, making it well-suited for simple, standard use cases. However, it is not optimized for specialized use cases, such as higher-density meshes (and, in some cases, multiple surfaces, which may also impact performance) in performance-critical applications. Users are encouraged to thoroughly test the addon to ensure it meets their specific requirements.
+
+- While other deformers support deforming multiple meshes at once, a `DragDeformer` can only be tied to a single mesh at a time.
+
 ## Changelog
 
-v0.30
-- add: standard deformer ( bend, twist and taper )
-- removed: bend deformer ( a better version is included inside the standard deformer )
+**v0.40**
 
-[v0.20](https://github.com/cloudofoz/godot-deformablemesh/releases/tag/v0.20)
+- **Add**: `DragDeformer` node.
+- **Add**: `_on_end_update()` overridable method for the deformer base class.
+- **Fix**: Removing a deformer now correctly unregisters the linked event listeners.
+- **Fix**: `_on_begin_update()` is now called only once, even with multiple surfaces.
 
-- add: bend deformers
-- add: base class to easily create custom deformers
-- code refactoring and minor improvements
+[**v0.30**](https://github.com/cloudofoz/godot-deformablemesh/releases/tag/v0.30)
 
-[v0.10](https://github.com/cloudofoz/godot-deformablemesh/tree/v0.1)
+- **Add**: `StandardDeformer` (Bend, Twist, and Taper).
+- **Remove**: `BendDeformer` (now included as part of `StandardDeformer`).
+- **Improve**: Deformer selection list.
 
-- first release
+[**v0.20**](https://github.com/cloudofoz/godot-deformablemesh/releases/tag/v0.20)
+
+- **Add**: Bend deformers.
+- **Add**: Base class to easily create custom deformers.
+- **Refactor**: Codebase and minor improvements.
+
+[**v0.10**](https://github.com/cloudofoz/godot-deformablemesh/tree/v0.1)
+
+- **First release**
+
 
 ## License
 
