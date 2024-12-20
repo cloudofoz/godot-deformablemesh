@@ -77,8 +77,8 @@ func _on_user_changed_mesh():
 # VIRTUAL METHODS
 #---------------------------------------------------------------------------------------------------
 
-## This method can be overrided to setup some initial parameters in the deformer
-## It's called once before every deformable mesh update
+## Override this method to set up initial parameters in the deformer.
+## Called once before every deformable mesh update.
 func _on_begin_update(deformable: DeformableMeshInstance3D) -> void:
 	pass
 
@@ -88,8 +88,13 @@ func _on_begin_update(deformable: DeformableMeshInstance3D) -> void:
 func _on_update_vertex(mesh_vertex: Vector3) -> Vector3:
 	return mesh_vertex
 
+## Override this method to perform final operations in the deformer.
+## Called once after every deformable mesh update is finished.
+func _on_end_update() -> void:
+	pass
+
 func _init():
-	set_notify_transform(true)	
+	set_notify_transform(true)
 	if(!self.visibility_changed.is_connected(dm_update_deformables)):
 		self.visibility_changed.connect(dm_update_deformables)
 	if(Engine.is_editor_hint()):

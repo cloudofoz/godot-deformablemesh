@@ -66,8 +66,6 @@ func create_from_surface(mesh: Mesh, surface_index: int):
 ## Generate a deformed mesh surface from an array of deformers
 func update_surface(deformers: Array[Deformer], deformable: DeformableMeshInstance3D) -> void:
 	assert(dm_st)
-	for deformer in deformers:
-		deformer._on_begin_update(deformable)
 	var vcount = dm_vpos.size()
 	var icount = dm_indices.size()
 	dm_st.clear()

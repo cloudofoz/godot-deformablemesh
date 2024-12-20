@@ -72,7 +72,6 @@ func _ready():
 func _process(_delta):
 	if(dm_need_update):
 		dm_update()
-		dm_need_update = false
 
 func _notification(what):
 	match what:
@@ -99,6 +98,9 @@ func dm_init_surfaces():
 func dm_update():
 	if(dm_surfaces.size() < 1): return
 	if(!mesh): return
+	for deformer in dm_deformers:
+		if(!deformer.visible): continue
+		deformer._on_begin_update(self)
 	mesh.clear_surfaces()
 	for sidx in range(dm_surfaces.size()):
 		var s = dm_surfaces[sidx] 
@@ -106,9 +108,18 @@ func dm_update():
 		s.update_surface(dm_deformers, self)
 		s.commit_to_surface(mesh)
 		mesh.surface_set_material(sidx, original_mesh.surface_get_material(sidx))
+	dm_need_update = false
+	for deformer in dm_deformers:
+		if(!deformer.visible): continue
+		deformer._on_end_update()
 
 func dm_clean_deformers():
-	dm_deformers.clear()
+	#dm_deformers.clear()
+	while not dm_deformers.is_empty():
+		var deformer = dm_deformers.back()
+		deformer.on_deformer_updated.disconnect(_on_deformer_updated)
+		deformer.on_deformer_removed.disconnect(_on_deformer_removed)
+		dm_deformers.pop_back()
 
 func dm_add_deformer(deformer: Deformer) -> void:
 	dm_deformers.push_back(deformer)
