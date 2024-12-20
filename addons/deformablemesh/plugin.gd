@@ -23,12 +23,14 @@ extends EditorPlugin
 
 
 func _enter_tree() -> void:
+	add_custom_type("DragDeformer", "MeshInstance3D", preload("dm_drag_deformer.gd"), preload("dm_icon_drag_deformer.svg"))
 	add_custom_type("SphericalDeformer", "MeshInstance3D", preload("dm_spherical_deformer.gd"), preload("dm_icon_spherical_deformer.svg"))
 	add_custom_type("StandardDeformer", "MeshInstance3D", preload("dm_std_deformer.gd"), preload("dm_icon_std_deformer.svg"))
 	add_custom_type("DeformableMeshInstance3D", "MeshInstance3D", preload("dm_deformable_mesh.gd"), preload("dm_icon_deformable_mesh.svg"))
 
 
 func _exit_tree() -> void:
+	remove_custom_type("DragDeformer")
 	remove_custom_type("SphericalDeformer")
 	remove_custom_type("StandardDeformer")
 	remove_custom_type("DeformableMeshInstance3D")
