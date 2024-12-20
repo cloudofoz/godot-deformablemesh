@@ -86,6 +86,12 @@ You need also to specify the correct deformation axis (for some effects like ben
 
 - While other deformers support deforming multiple meshes at once, a `DragDeformer` can only be tied to a single mesh at a time.
 
+## Credits
+I wish to thank the community for any contribution or feedback. Special thanks to:
+
+- **Kevin Loustau**, for sparking the idea behind the `DragDeformer` feature.
+
+
 ## Changelog
 
 **v0.40**
