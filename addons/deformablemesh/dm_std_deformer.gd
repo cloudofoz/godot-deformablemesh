@@ -45,11 +45,13 @@ var type = 0:
 @export_enum("X:0", "Y:1", "Z:2") 
 var main_axis = 1:
 	set(value):
-		if value != second_axis:
-			main_axis = value
-		else:
-			push_warning("Main axis has to be different from the secondary axis")
-			main_axis = ( value + 1 ) % 3
+		main_axis = value
+		if value == second_axis:
+			if is_node_ready():
+				push_warning("Main axis has to be different from the secondary axis")
+			dm_axis_internal_update = true
+			second_axis = ( value + 1 ) % 3
+			dm_axis_internal_update = false
 		dm_third_axis = dm_find_third_axis(main_axis, second_axis)
 		dm_update_deformables()
 
@@ -60,10 +62,12 @@ var second_axis = 0:
 		if value != main_axis:
 			second_axis = value
 		else:
-			push_warning("Secondary axis has to be different from the main axis")
+			if is_node_ready():
+				push_warning("Secondary axis has to be different from the main axis")
 			second_axis = ( value + 1 ) % 3
-		dm_third_axis = dm_find_third_axis(main_axis, second_axis)
-		dm_update_deformables()
+		if !dm_axis_internal_update:
+			dm_third_axis = dm_find_third_axis(main_axis, second_axis)
+			dm_update_deformables()
 
 @export_subgroup("Blend - Twist", "bending_")
 
@@ -87,6 +91,8 @@ var taper_factor: float = 0:
 #---------------------------------------------------------------------------------------------------
 # PRIVATE VARIABLES
 #---------------------------------------------------------------------------------------------------
+
+var dm_axis_internal_update: bool = false
 
 var dm_third_axis: float    = 2
 
